@@ -2,6 +2,9 @@
 
 namespace Plainion.DrawVista.UseCases
 {
+    /// <summary>
+    /// Automatically generates an index page with links to all known pages.
+    /// </summary>
     public class IndexPageGenerator : IIndexPageGenerator
     {
         private const string PageName = "index";
