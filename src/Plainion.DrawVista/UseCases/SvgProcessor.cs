@@ -2,11 +2,12 @@ using System.Xml.Linq;
 
 namespace Plainion.DrawVista.UseCases;
 
-public class SvgProcessor(ISvgCaptionParser parser, ISvgHyperlinkFormatter formatter, IDocumentStore store)
+public class SvgProcessor(ISvgCaptionParser parser, ISvgHyperlinkFormatter formatter, IDocumentStore store, IIndexPageGenerator indexPageGenerator)
 {
     private readonly ISvgCaptionParser myParser = parser;
     private readonly ISvgHyperlinkFormatter myFormatter = formatter;
     private readonly IDocumentStore myStore = store;
+    private readonly IIndexPageGenerator myIndexPageGenerator = indexPageGenerator;
 
     /// <summary>
     /// Processes existing and newly uploaded documents.
@@ -24,7 +25,13 @@ public class SvgProcessor(ISvgCaptionParser parser, ISvgHyperlinkFormatter forma
 
         var parsedDocuments = documents
             .Select(x => ParsedDocument.Create(myParser, x))
-            .Concat(existingDocuments);
+            .Concat(existingDocuments).ToList();
+
+        //Generate index page if it does not exist already
+        if (!myIndexPageGenerator.IndexPageExists(knownPageNames))
+        {
+           parsedDocuments.Add(ParsedDocument.Create(myParser, myIndexPageGenerator.GenerateIndexPage(knownPageNames)));
+        }
 
         foreach (var doc in parsedDocuments)
         {

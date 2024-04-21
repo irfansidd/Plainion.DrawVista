@@ -36,6 +36,7 @@ builder.Services.AddSingleton<IDocumentStore>(new DocumentStoreCachingDecorator(
 builder.Services.AddSingleton(new DrawingWorkbookFactory(inputFolder));
 builder.Services.AddSingleton<ISvgCaptionParser, SvgCaptionParser>();
 builder.Services.AddSingleton<ISvgHyperlinkFormatter, SvgHyperlinkFormatter>();
+builder.Services.AddSingleton<IIndexPageGenerator, IndexPageGenerator>();
 builder.Services.AddSingleton<SvgProcessor>();
 builder.Services.AddSingleton<FullTextSearch>();
 
